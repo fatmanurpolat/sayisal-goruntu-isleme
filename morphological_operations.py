@@ -90,5 +90,4 @@ def main():
                 kapanmis_resim = normalize_image(kapanmis_resim)
                 st.image(kapanmis_resim, caption="Kapama", use_column_width=True)
 
-if __name__ == "__main__":
-    main()
+

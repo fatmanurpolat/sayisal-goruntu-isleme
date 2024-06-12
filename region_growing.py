@@ -1,7 +1,9 @@
 import numpy as np
 
 def region_growing(image, seed_point, threshold):
+     # Görüntünün satır ve sütun sayısı
     rows, cols = image.shape[:2]
+     # Segmentasyon için boş bir görüntü luştur
     segmented_image = np.zeros_like(image, np.uint8)
     seed_list = [seed_point]
 
