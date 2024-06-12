@@ -14,11 +14,11 @@ st.markdown(
     <style>
     body {
         font-family: 'Comic Sans MS', cursive, sans-serif;
-        background-color: #F5F5F5; /* Light background */
+        background-color: #FFFFFF; /* White background */
     }
     .stButton>button {
-        background-color: #FFB6C1; /* Light pink */
-        color: black;
+        background-color: #AD95D4; /* Light pink */
+        color: white; /* White font */
         border-radius: 16px;
         height: 50px;
         width: 100%;
@@ -27,7 +27,7 @@ st.markdown(
         margin-bottom: 10px;
     }
     .stFileUploader>div>button {
-        background-color: #FFB6C1; /* Light pink */
+        background-color: #B6E4FF; /* Light pink */
         color: black;
         border-radius: 16px;
         height: 50px;
@@ -36,7 +36,7 @@ st.markdown(
         font-size: 18px;
     }
     .stSidebar .stButton>button {
-        background-color: #FFB6C1; /* Light pink */
+        background-color: #B6E4FF; /* Light pink */
         color: black;
         border-radius: 16px;
         height: 50px;
@@ -45,6 +45,10 @@ st.markdown(
         font-size: 18px;
         margin-bottom: 10px;
     }
+    .stSidebar .stSelectbox>div>div>div {
+        font-size: 20px; /* Font size increase */
+        text-align: center; /* Center alignment */
+    }
     .stSubheader {
         color: #FF69B4; /* Hot pink */
     }
@@ -52,6 +56,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 def normalize_image(image):
     """Normalize image data to the range [0.0, 1.0]."""
