@@ -1,12 +1,12 @@
-
+import numpy as np
 import streamlit as st
 from PIL import Image
-import numpy as np
-from edge_detection import *
-from blurring import *
-from histogram import *
-from morphological_operations import *
 import cv2
+from edge_detection import sobel_edge_detection, canny_edge_detection
+from blurring import average_blur, median_blur, gaussian_blur
+from histogram import compute_histogram, plot_histogram, histogram_equalization
+from morphological_operations import erosion, dilation, opening, closing
+from region_growing import region_growing
 
 # Custom CSS to change the font and colors
 st.markdown(
@@ -75,6 +75,8 @@ def main():
         st.session_state.menu_secimi = "Histogram"
     if st.sidebar.button("Morfolojik İşlemler"):
         st.session_state.menu_secimi = "Morfolojik İşlemler"
+    if st.sidebar.button("Region Growing"):
+        st.session_state.menu_secimi = "Region Growing"
 
     yuklenen_resim = st.file_uploader("Bir resim yükleyin", type=["jpg", "jpeg", "png"])
 
@@ -131,8 +133,10 @@ def main():
             histogram = compute_histogram(resim_dizisi)
             plot_histogram(histogram)
 
+            threshold = st.slider("Histogram Eşik Değeri", min_value=0, max_value=255, value=128)
+
             if st.button("Histogram Eşitlemeyi Uygula"):
-                esitleme_resim = histogram_equalization(resim_dizisi)
+                esitleme_resim = histogram_equalization(resim_dizisi, threshold)
                 esitleme_resim = normalize_image(esitleme_resim)
                 st.image(esitleme_resim, caption="Histogram Eşitleme", use_column_width=True)
 
@@ -154,6 +158,31 @@ def main():
                 islenmis_resim = dilation(resim_dizisi)
                 islenmis_resim = normalize_image(islenmis_resim)
                 st.image(islenmis_resim, caption="Genleşme", use_column_width=True)
+
+            if st.button("Açmayı Uygula"):
+                acilmis_resim = opening(resim_dizisi)
+                acilmis_resim = normalize_image(acilmis_resim)
+                st.image(acilmis_resim, caption="Açma", use_column_width=True)
+
+            if st.button("Kapamayı Uygula"):
+                kapanmis_resim = closing(resim_dizisi)
+                kapanmis_resim = normalize_image(kapanmis_resim)
+                st.image(kapanmis_resim, caption="Kapama", use_column_width=True)
+
+        # Region Growing
+        elif st.session_state.menu_secimi == "Region Growing":
+            st.subheader("Region Growing")
+
+            seed_x = st.number_input("Başlangıç Noktası X Koordinatı", min_value=0, max_value=resim_dizisi.shape[0]-1, value=0)
+            seed_y = st.number_input("Başlangıç Noktası Y Koordinatı", min_value=0, max_value=resim_dizisi.shape[1]-1, value=0)
+            threshold = st.slider("Eşik Değeri", min_value=0, max_value=255, value=15)
+
+            if st.button("Region Growing Uygula"):
+                seed_point = (seed_x, seed_y)
+                gray_image = cv2.cvtColor(resim_dizisi, cv2.COLOR_RGB2GRAY)  # Gri tonlamalı resme çeviriyoruz
+                region_growing_resim = region_growing(gray_image, seed_point, threshold)
+                region_growing_resim = normalize_image(region_growing_resim)
+                st.image(region_growing_resim, caption="Region Growing", use_column_width=True)
 
 if __name__ == "__main__":
     main()

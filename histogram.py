@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import streamlit as st 
-from PIL import Image
+import streamlit as st
 import cv2
 
 def compute_histogram(image):
@@ -34,10 +33,16 @@ def plot_histogram(histogram):
         plt.legend()  # Gri tonlamayı ayırt etmek için açıklama ekleyin
     st.pyplot(plt)
 
-def histogram_equalization(image):
+def histogram_equalization(image, threshold=128):
     if len(image.shape) == 3:  # Renkli resim
-        channels = [cv2.equalizeHist(image[:, :, i]) for i in range(3)]
+        channels = []
+        for i in range(3):
+            channel = image[:, :, i]
+            channel = np.clip(channel, 0, threshold)
+            equalized_channel = cv2.equalizeHist(channel)
+            channels.append(equalized_channel)
         equalized_image = cv2.merge(channels)
     else:  # Gri tonlamalı resim
+        image = np.clip(image, 0, threshold)
         equalized_image = cv2.equalizeHist(image)
     return equalized_image
